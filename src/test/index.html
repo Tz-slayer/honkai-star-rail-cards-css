@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>噪点纹理 + 彩虹光效演示</title>
+    <style>
+        /* 全局重置 */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #111;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            gap: 60px;
+        }
+
+        h2 { margin-bottom: 10px; font-weight: 300; letter-spacing: 1px; color: #aaa; }
+        p { color: #666; font-size: 0.9rem; margin-bottom: 20px; }
+
+        /* =========================================
+           通用样式：彩虹背景生成器
+           (实际项目中你可以换成任何图片或渐变)
+           ========================================= */
+        .rainbow-base {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                45deg, 
+                #ff0055, #ff00cc, #9900ff, #0066ff, 
+                #00ffff, #00ff66, #ccff00, #ffcc00, #ff0055
+            );
+            background-size: 300% 300%;
+            animation: rainbow-flow 6s ease infinite;
+            z-index: 1;
+        }
+
+        @keyframes rainbow-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* =========================================
+           【关键】噪点纹理生成器 (模拟 eff_noise_dice_color.png)
+           如果你有自己的图片，请删除下面的 background-image 生成代码，
+           改用：background-image: url('eff_noise_dice_color.png');
+           ========================================= */
+        .noise-texture {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none; /* 让鼠标事件穿透 */
+            
+            /* 这里用 CSS 渐变模拟了一个像素噪点图，方便你直接运行看效果 */
+            /* 实际使用时，请注释掉下面这行，使用你的图片 URL */
+            background-image: url("D:/Others/解包/崩坏星穹铁道/4.0/活动/上把/Texture2D/Eff_Nosie_Dice_Color.png");
+            
+            /* 【重要】如果是像素图，必须设置为 auto 或具体像素，不能 cover/stretch */
+            background-size: 64px 64px; 
+            background-repeat: repeat;
+            
+            /* 默认不透明度，具体在每个方案中覆盖 */
+            opacity: 0.5; 
+        }
+
+        /* =========================================
+           方案一：全息磨砂感 (Overlay)
+           最推荐：既有彩虹色，又有颗粒质感，像磨砂玻璃
+           ========================================= */
+        .card-overlay {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .card-overlay .noise-texture {
+            mix-blend-mode: overlay; /* 核心：叠加模式 */
+            opacity: 0.4; /* 调整噪点强度 */
+        }
+        
+        /* 内容层 */
+        .content {
+            position: relative;
+            z-index: 3;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.2); /* 轻微压暗背景以突出文字 */
+            backdrop-filter: blur(2px);
+        }
+        .content h3 { font-size: 2rem; margin-bottom: 10px; text-shadow: 0 2px 4px black; }
+        .content span { font-size: 0.9rem; opacity: 0.8; }
+
+        /* =========================================
+           方案二：霓虹故障风 (Color Dodge)
+           高对比度，噪点亮部会发光，适合赛博朋克
+           ========================================= */
+        .card-dodge {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255, 0, 200, 0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .card-dodge .noise-texture {
+            mix-blend-mode: color-dodge; /* 核心：颜色减淡，产生强光 */
+            opacity: 0.15; /* 必须很低，否则太亮 */
+            animation: noise-shift 0.5s steps(4) infinite; /* 让噪点抖动 */
+        }
+
+        @keyframes noise-shift {
+            0% { background-position: 0 0; }
+            25% { background-position: 10px 0; }
+            50% { background-position: 0 10px; }
+            75% { background-position: -10px 0; }
+            100% { background-position: 0 0; }
+        }
+
+        /* =========================================
+           方案三：像素化遮罩 (Mask)
+           彩虹光直接被切成像素块，不再平滑
+           ========================================= */
+        .card-mask {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #000; /* 底色必须是黑的，否则透明部分会露馅 */
+            border: 1px solid #333;
+        }
+
+        .card-mask .rainbow-base {
+            /* 将彩虹层应用 mask */
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            
+            -webkit-mask-size: 32px 32px; /* 控制像素块大小 */
+            mask-size: 32px 32px;
+            -webkit-mask-repeat: repeat;
+            mask-repeat: repeat;
+            
+            /* 移除原来的 z-index，因为它现在是被遮罩的对象 */
+            z-index: 1; 
+        }
+        
+        /* 遮罩方案不需要单独的 noise-texture 层，因为直接用做 mask 了 */
+        .card-mask .noise-texture { display: none; }
+
+        .card-mask .content {
+            background: transparent;
+            text-shadow: 0 0 10px black;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 方案一 -->
+    <div>
+        <h2>1. 全息磨砂感 (Overlay)</h2>
+        <p>mix-blend-mode: overlay | 质感最自然，适合卡片背景</p>
+        <div class="card-overlay">
+            <div class="rainbow-base"></div>
+            <!-- 这里就是那个噪点层 -->
+            <div class="noise-texture"></div>
+            
+            <div class="content">
+                <h3>HOLO</h3>
+                <span>SR / CARD</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 方案二 -->
+    <div>
+        <h2>2. 霓虹故障风 (Color Dodge)</h2>
+        <p>mix-blend-mode: color-dodge | 高亮发光，适合赛博朋克/游戏特效</p>
+        <div class="card-dodge">
+            <div class="rainbow-base"></div>
+            <div class="noise-texture"></div>
+            
+            <div class="content">
+                <h3>GLITCH</h3>
+                <span>SYSTEM ERROR</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 方案三 -->
+    <div>
+        <h2>3. 像素化遮罩 (Mask)</h2>
+        <p>mask-image: noise | 光本身就是像素块，复古游戏风</p>
+        <div class="card-mask">
+            <div class="rainbow-base"></div>
+            <!-- 此方案不需要单独的噪点层 -->
+            
+            <div class="content">
+                <h3>PIXEL</h3>
+                <span>8-BIT STYLE</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

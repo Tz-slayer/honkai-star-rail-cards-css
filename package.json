@@ -1,17 +1,25 @@
 {
-  "name": "pokemon-deck-builder",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.1.0",
-    "pokemontcgsdk": "^2.0.0",
-    "svelte": "^3.52.0",
-    "vite": "^3.2.0"
-  }
+	"name": "honkai-star-rail-cards-css",
+	"private": true,
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite --host",
+		"build": "tsc && vite build",
+		"preview": "vite preview --host"
+	},
+	"dependencies": {
+		"framer-motion": "^12.34.3",
+		"pokemontcgsdk": "^2.0.0",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4",
+		"zustand": "^5.0.11"
+	},
+	"devDependencies": {
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"@vitejs/plugin-react": "^5.1.4",
+		"typescript": "^5.9.3",
+		"vite": "^6.0.0"
+	}
 }

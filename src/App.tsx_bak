@@ -1,0 +1,256 @@
+import React, { useState, useEffect } from 'react'
+import Search from './Search'
+import CardGrid from './CardGrid'
+import CardProxy from './lib/components/CardProxy'
+
+interface PokemonCard {
+  id: string
+  name: string
+  number: string
+  set: string
+  types?: string[]
+  supertype?: string
+  subtypes?: string[]
+  rarity?: string
+  images?: { large: string }
+  isReverse?: boolean
+}
+
+function App() {
+  const [cards, setCards]     = useState<PokemonCard[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [query, setQuery]     = useState('')
+
+  useEffect(() => {
+    fetch('/data/cards.json')
+      .then((r) => r.json())
+      .then((data: PokemonCard[]) => {
+        setCards(data)
+        setIsLoading(false)
+      })
+
+    // Anchor scroll on load
+    const headings = document.querySelectorAll('h1,h2,h3')
+    const anchor = [...headings].find((el) => {
+      const id   = el.getAttribute('id')?.replace(/^.*?-/, '')
+      const hash = window.location.hash?.replace(/^.*?-/, '')
+      return id === hash
+    })
+    if (anchor) {
+      setTimeout(() => anchor.scrollIntoView(), 100)
+    }
+  }, [])
+
+  // ── card groups ──────────────────────────────────────────────────────────
+  const showcase    = cards[0]
+  const basics      = cards.slice(1, 4)
+  const reverse     = [...cards.slice(4, 7), ...cards.slice(70, 76)]
+  const holos       = cards.slice(7, 13)
+  const cosmos      = cards.slice(13, 16)
+  const amazings    = cards.slice(76, 85)
+  const radiant     = cards.slice(16, 19)
+  const basicGallery = cards.slice(19, 22)
+  const vee         = cards.slice(22, 25)
+  const veeUltra    = cards.slice(25, 28)
+  const veeAlt      = cards.slice(28, 34)
+  const veeMax      = cards.slice(37, 40)
+  const veeMaxAlt   = cards.slice(40, 43)
+  const veeStar     = cards.slice(43, 46)
+  const trainerHolo = cards.slice(46, 52)
+  const rainbow     = cards.slice(52, 58)
+  const gold        = cards.slice(58, 64)
+  const veeGallery  = cards.slice(64, 70)
+  const shinyVault  = cards.slice(85, 91)
+
+  // ── helper to render a card group ────────────────────────────────────────
+  const renderGroup = (group: PokemonCard[], extraProps?: Partial<PokemonCard>) =>
+    isLoading ? (
+      <p>loading...</p>
+    ) : (
+      group.map((card) => (
+        <CardProxy
+          key={card.id}
+          id={card.id}
+          name={card.name}
+          number={card.number}
+          set={card.set}
+          types={card.types}
+          supertype={card.supertype}
+          subtypes={card.subtypes}
+          rarity={card.rarity}
+          {...extraProps}
+        />
+      ))
+    )
+
+  return (
+    <main>
+      <header>
+        <h1 id="⚓-top">Pokemon Cards <sup>V2</sup></h1>
+
+        <p className="author">
+          By{' '}
+          <a href="https://twitter.com/simeydotme">
+            <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <title>Twitter</title>
+              <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+            </svg>{' '}
+            @simeydotme
+          </a>{' '}
+          |{' '}
+          <em>
+            <a href="https://github.com/simeydotme/pokemon-cards-css">
+              <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <title>GitHub</title>
+                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+              </svg>{' '}
+              Simon Goellner
+            </a>
+          </em>
+        </p>
+
+        <section className="intro" id="⚓-intro">
+          <p>
+            A collection of <mark>advanced CSS</mark> styles to create{' '}
+            <mark>realistic-looking effects</mark> for the faces of Pokemon cards. The cards use{' '}
+            <mark>3d transforms</mark>, <mark>filters</mark>, <mark>blend modes</mark>,{' '}
+            <mark>css gradients</mark> and interactions to provide a unique experience when taking a
+            closer look!
+          </p>
+        </section>
+
+        <div className="showcase">
+          {!showcase ? (
+            <p>loading...</p>
+          ) : (
+            <CardProxy
+              id={showcase.id}
+              name={showcase.name}
+              set={showcase.set}
+              number={showcase.number}
+              types={showcase.types}
+              supertype={showcase.supertype}
+              subtypes={showcase.subtypes}
+              rarity={showcase.rarity}
+              showcase={true}
+            />
+          )}
+        </div>
+
+        <section className="info">
+          <h2>Click on a Card to take a Closer look!</h2>
+          <hr />
+          <p className="small">
+            I'm using React to handle interactivity and state;{' '}
+            <strong>assigning values to css custom properties</strong> (variables) which in-turn
+            drive the effects and 3d transforms.
+            <br />
+            <a href="https://github.com/simeydotme/pokemon-cards-css">
+              Source code is in the repository
+            </a>
+            .
+          </p>
+        </section>
+      </header>
+
+      <Search query={query} onQueryChange={setQuery} />
+
+      {query.length < 3 && (
+        <>
+          <h2 id="⚓-common"><a href="#⚓-common">Common &amp; Uncommon</a></h2>
+          <p>
+            All cards get a 3d rotation with CSS based on the cursor position.
+            <br /> The default basic non-holo cards simply apply a{' '}
+            <mark>flare/glare effect</mark> to the card which follows the mouse.
+          </p>
+          <CardGrid>{renderGroup(basics)}</CardGrid>
+
+          <h2 id="⚓-reverse"><a href="#⚓-reverse">Reverse Holo non-rares</a></h2>
+          <p>
+            Reverse holo cards come in <mark>many shapes and sizes</mark>. The{' '}
+            <mark>background uses a foil and a mask layer</mark> along with a glare.
+          </p>
+          <CardGrid>
+            {isLoading ? <p>loading...</p> : reverse.map((card) => (
+              <CardProxy key={card.id} id={card.id} name={card.name} number={card.number}
+                set={card.set} types={card.types} supertype={card.supertype}
+                subtypes={card.subtypes} rarity={card.rarity} isReverse={true}
+              />
+            ))}
+          </CardGrid>
+
+          <h2 id="⚓-holo"><a href="#⚓-holo">Holofoil Rare</a></h2>
+          <p>Holo cards have an additional <mark>vertical beam holo effect</mark>.</p>
+          <CardGrid>{renderGroup(holos)}</CardGrid>
+
+          <h2 id="⚓-galaxy"><a href="#⚓-galaxy">Galaxy/Cosmos Holofoil</a></h2>
+          <p>Similar to the Holofoil, but uses a <mark>background of a galaxy effect</mark>.</p>
+          <h3>An instant classic for any PTCG fan!</h3>
+          <CardGrid>{renderGroup(cosmos)}</CardGrid>
+
+          <h2 id="⚓-amazing"><a href="#⚓-amazing">Holofoil Amazing Rare</a></h2>
+          <p>Amazing Rare cards have a <mark>very unique shiny foil</mark>.</p>
+          <CardGrid>{renderGroup(amazings)}</CardGrid>
+
+          <h2 id="⚓-radiant"><a href="#⚓-radiant">Radiant Holofoil</a></h2>
+          <p>The newest holofoil added to the series!</p>
+          <CardGrid>{renderGroup(radiant)}</CardGrid>
+
+          <h2 id="⚓-trainer-gallery-holo"><a href="#⚓-trainer-gallery-holo">Trainer Gallery Holofoil</a></h2>
+          <p>Gives a <mark>kind of metallic effect with iridescent shine</mark>.</p>
+          <CardGrid>{renderGroup(basicGallery)}</CardGrid>
+
+          <h2 id="⚓-v"><a href="#⚓-v">Pokemon V</a></h2>
+          <p>V cards have a <mark>diagonal holographic effect</mark>.</p>
+          <CardGrid>{renderGroup(vee)}</CardGrid>
+
+          <h2 id="⚓-v-full-art"><a href="#⚓-v-full-art">Pokemon V <sup>(Full Art)</sup></a></h2>
+          <p>Full-Art cards <mark>use diagonal gradients</mark> with <mark>additional texture</mark>.</p>
+          <CardGrid>{renderGroup(veeUltra)}</CardGrid>
+
+          <h2 id="⚓-v-alternate-art"><a href="#⚓-v-alternate-art">Pokemon V <sup>(Alternate Art)</sup></a></h2>
+          <p>Alternate Art V cards have <mark>practically the same holo effect as Ultra Rare</mark>.</p>
+          <CardGrid>{renderGroup(veeAlt)}</CardGrid>
+
+          <h2 id="⚓-v-max"><a href="#⚓-v-max">VMax</a></h2>
+          <p>The gradient effect of Pokemon VMax is more subtle, using a <mark>larger background gradient</mark>.</p>
+          <CardGrid>{renderGroup(veeMax)}</CardGrid>
+
+          <h2 id="⚓-v-max-alternate"><a href="#⚓-v-max-alternate">VMax <sup>(Alternate/Rainbow)</sup></a></h2>
+          <p>These are <mark>classed as "rainbow rare"</mark> and have a <mark>vibrant and glittery overlay</mark>.</p>
+          <CardGrid>{renderGroup(veeMaxAlt)}</CardGrid>
+
+          <h2 id="⚓-v-star"><a href="#⚓-v-star">VStar</a></h2>
+          <p>VStar are quite <mark>similar to the Ultra Rare</mark> cards, generally <mark>brighter with a pastel hue</mark>.</p>
+          <CardGrid>{renderGroup(veeStar)}</CardGrid>
+
+          <h2 id="⚓-trainer-full-art"><a href="#⚓-trainer-full-art">Trainer Holo <sup>(Full Art / Trainer Gallery)</sup></a></h2>
+          <p>Diagonal gradients overlaying a texture — <mark>similar to Ultra Rare</mark> cards.</p>
+          <CardGrid>{renderGroup(trainerHolo)}</CardGrid>
+
+          <h2 id="⚓-rainbow-rare"><a href="#⚓-rainbow-rare">Rainbow Rare <sup>(VMax, VStar)</sup></a></h2>
+          <p>The Rainbow Rare is a <mark>super glittery effect on top of pastel gradients</mark>.</p>
+          <CardGrid>{renderGroup(rainbow)}</CardGrid>
+
+          <h2 id="⚓-secret-rare"><a href="#⚓-secret-rare">Secret Rare <sup>(Gold)</sup></a></h2>
+          <p><mark>GOLD!</mark> Two glitter layers sliding in opposite directions with a shimmering effect.</p>
+          <CardGrid>{renderGroup(gold)}</CardGrid>
+
+          <h2 id="⚓-trainer-gallery-v"><a href="#⚓-trainer-gallery-v">Trainer Gallery <sup>(V / VMax)</sup></a></h2>
+          <p>Similar to the normal V and VMax cards with tweaked values and a different background texture.</p>
+          <CardGrid>{renderGroup(veeGallery)}</CardGrid>
+
+          <h2 id="⚓-shiny-vault"><a href="#⚓-shiny-vault">Shiny Vault <sup>(Basic / Stage 1 / V / VMax)</sup></a></h2>
+          <p>Shiny Vault cards have a <mark>shiny silver foil background</mark>.</p>
+          <CardGrid>{renderGroup(shinyVault)}</CardGrid>
+        </>
+      )}
+
+      <div className="back-to-top">
+        <a href="#⚓-top">Back to Top</a>
+      </div>
+    </main>
+  )
+}
+
+export default App

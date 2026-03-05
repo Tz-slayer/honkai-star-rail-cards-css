@@ -1,0 +1,115 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.headerTop {
+  display: grid;
+  width: 100%;
+  margin-bottom: 20px;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 2px 12px;
+  align-items: center;
+}
+
+.diceCombatIcon {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: 5rem;
+  height: 5rem;
+  background-color: #e5cb99;
+  -webkit-mask-image: url("/img/DiceCombatIcon.png");
+  mask-image: url("/img/DiceCombatIcon.png");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.subTitle {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #e5cb99;
+  align-self: end;
+}
+
+.mainTitle {
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 2rem;
+  color: white;
+  line-height: 1;
+  align-self: start;
+}
+
+.headerBottom {
+  margin-top: -2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.splitLine {
+  display: block;
+  height: 0.9rem;
+  flex: 1;
+  color: white;
+  opacity: 0.6;
+}
+
+.deckToggle {
+  width: 30vw;
+  min-width: 300px;
+  max-width: 600px;
+  flex-shrink: 0;
+  margin: 0 auto;
+  cursor: pointer;
+  user-select: none;
+  display: block;
+}
+
+.deckToggle svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.slider {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.isRight .slider {
+  transform: translateX(276px);
+}
+
+.deckToggle text {
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.isRight .textLeft { 
+  fill: #8ca6ff !important; 
+  font-weight: normal !important; 
+}
+.isRight .textRight { 
+  fill: #2d2f39 !important; 
+  font-weight: bold !important; 
+}
+
+.deckToggle:not(.isRight) .textLeft { 
+  fill: #2d2f39 !important; 
+  font-weight: bold !important; 
+}
+.deckToggle:not(.isRight) .textRight { 
+  fill: #8ca6ff !important; 
+  font-weight: normal !important; 
+}

@@ -1,0 +1,87 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+  /* 去掉浏览器默认样式 */
+  padding: 0;
+  margin-left: 1vw;
+  border: none;
+  background: none;
+  max-width: none;
+  max-height: none;
+  justify-content: space-between;
+  width: 25%;
+  height: auto;
+  overflow: visible;
+}
+
+.dialog::backdrop {
+  background: none; /* 去掉默认的半透明遮罩背景 */
+}
+
+.header {
+  display: flex;
+  flex-direction: column; /* 让图标和文字垂直排列 */
+  align-items: center;    /* 让子元素水平居中对齐 */
+  width: 100%;            /* 填满父容器 .dialog */
+}
+
+.headerSvg {
+  margin-bottom: 2vh;
+  width: 100%; /* 宽度随父容器撑满 */
+  aspect-ratio: 1020/110; /* 增加高度比例，容纳投影或溢出内容 */
+  max-width: 500px; /* 或者设置一个最大限制 */
+  display: block; /* 消除 svg 下方的幽灵间隙 */
+  overflow: visible; /* 允许内部元素（如阴影）溢出边界显示 */
+}
+
+.headerDiv {
+  width: 100%;        /* 宽度填满容器 */
+  box-sizing: border-box; /* 确保 padding 不会撑破布局 */
+  text-align: center;    /* 让文字在 100% 宽度内居中 */
+  position: relative;    /* 为 ::before 提供定位基准 */
+  display: block;        /* 从 inline-block 改为 block 以填满宽度 */
+  padding: 0.5rem 1.2rem; /* 控制圆角矩形与文字的边距 */
+  font-size: 1.5rem;
+  color: white;
+  font-weight: bold;     /* 修正原有的 font-style: bold 为 font-weight */
+  font-family: Arial, Helvetica, sans-serif;
+  z-index: 1;            /* 确保文字在背景之上 */
+}
+
+.headerDiv::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #2d2f39;
+  opacity: 0.5;          /* 背景透明度 */
+  border-radius: 0.5rem; /* 设置圆角 */
+  z-index: -1;           /* 确保背景层在文字下方 */
+}
+
+.section {
+  flex: 1;                /* 占据剩余高度 */
+  overflow-y: auto;       /* 垂直滚动 */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 固定三列 */
+  gap: 1rem;              /* 卡牌间距 */
+  padding: 1rem;          /* 内容内边距 */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 滚动条美化 (可选) */
+.section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.section::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.section::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}

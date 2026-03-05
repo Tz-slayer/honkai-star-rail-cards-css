@@ -1,0 +1,224 @@
+/*
+
+  HSR HOLO
+
+  基于 regular-holo 的彩虹光栅效果，覆盖全卡面（无 Pokémon 专用 clip-path）
+
+*/
+
+/* 全卡面覆盖：使用贴合卡片圆角的 inset 代替 Pokémon 专用的 --clip */
+.card[data-rarity="hsr holo"] .card__shine,
+.card[data-rarity="hsr holo"] .card__shine:before,
+.card[data-rarity="hsr holo"] .card__shine:after {
+  clip-path: inset(0% 0% round 4.5% / 3.5%);
+}
+
+
+
+
+
+/*
+
+  SHINE LAYERS
+
+*/
+
+.card[data-rarity="hsr holo"] .card__shine {
+
+  --scanlines-space: 1px;
+  --scanlines-light: rgba(255, 255, 255, 0.55);
+  --scanlines-dark:  rgba(0,   0,   0,   0);
+
+  /* 彩虹条 × 水平扫描线 */
+  background-image:
+    repeating-linear-gradient(
+      110deg,
+      var(--violet), var(--blue), var(--green), var(--yellow), var(--red),
+      var(--violet), var(--blue), var(--green), var(--yellow), var(--red),
+      var(--violet), var(--blue), var(--green), var(--yellow), var(--red)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--scanlines-dark)  calc(var(--scanlines-space) * 0),
+      var(--scanlines-dark)  calc(var(--scanlines-space) * 2),
+      var(--scanlines-light) calc(var(--scanlines-space) * 2),
+      var(--scanlines-light) calc(var(--scanlines-space) * 4)
+    );
+
+  background-position:
+    calc(((50% - var(--background-x)) * 2.6) + 50%) calc(((50% - var(--background-y)) * 3.5) + 50%),
+    center center;
+
+  background-size:
+    400% 400%,
+    cover;
+
+  background-blend-mode: overlay;
+  filter: brightness(1.1) contrast(1.1) saturate(1.5);
+  mix-blend-mode: color-dodge;
+
+}
+
+/* 光标高光晕聚焦 */
+.card[data-rarity="hsr holo"] .card__shine:after {
+
+  content: "";
+
+  background-image:
+    radial-gradient(
+      farthest-corner circle
+        at var(--pointer-x) var(--pointer-y),
+        hsla(0, 0%, 90%, 0.8)  0%,
+        hsla(0, 0%, 78%, 0.1) 25%,
+        hsl( 0, 0%, 0%)       90%
+    );
+
+  background-position: center center;
+  background-size: cover;
+
+  mix-blend-mode: luminosity;
+  filter: brightness(0.6) contrast(4);
+
+}
+
+/* 纵向亮/暗交替光栅条 */
+.card[data-rarity="hsr holo"] .card__shine:before {
+
+  content: "";
+
+  --bars: 3%;
+  --bar-color: hsla(0, 0%, 70%, 1);
+  --bar-bg:    hsla(0, 0%, 0%,  1);
+
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      var(--bar-bg)    calc(var(--bars) * 2),
+      var(--bar-color) calc(var(--bars) * 3),
+      var(--bar-bg)    calc(var(--bars) * 3.5),
+      var(--bar-color) calc(var(--bars) * 4),
+      var(--bar-bg)    calc(var(--bars) * 5),
+      var(--bar-bg)    calc(var(--bars) * 14)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      var(--bar-bg)    calc(var(--bars) * 2),
+      var(--bar-color) calc(var(--bars) * 3),
+      var(--bar-bg)    calc(var(--bars) * 3.5),
+      var(--bar-color) calc(var(--bars) * 4),
+      var(--bar-bg)    calc(var(--bars) * 5),
+      var(--bar-bg)    calc(var(--bars) * 10)
+    );
+
+  background-position:
+    calc((((50% - var(--background-x)) *  1.65) + 50%) + (var(--background-y) *  0.5)) var(--background-x),
+    calc((((50% - var(--background-x)) * -0.90) + 50%) - (var(--background-y) * 0.75)) var(--background-y);
+
+  background-size:
+    200% 200%,
+    200% 200%;
+
+  background-blend-mode: screen;
+  filter: brightness(1.15) contrast(1.1);
+  mix-blend-mode: hard-light;
+
+}
+
+
+
+
+
+
+
+/*
+
+  GLARE LAYERS
+
+*/
+		
+.card[data-rarity="hsr holo"] .card__glare {
+
+  opacity: calc(var(--card-opacity) * 0.8);
+  filter: brightness(0.8) contrast(1.5);
+  mix-blend-mode: overlay;
+
+}
+
+.card[data-rarity="hsr holo"] .card__glare:after {
+
+  content: "";
+
+  background-image:
+    radial-gradient(
+      farthest-corner circle
+        at var(--pointer-x) var(--pointer-y),
+        hsl(180, 100%, 95%)       5%,
+        hsla(0, 0%, 39%, 0.25)   55%,
+        hsla(0, 0%, 0%,  0.36)  110%
+    );
+
+  mix-blend-mode: overlay;
+  filter: brightness(0.6) contrast(3);
+
+}
+
+
+
+
+
+
+
+
+
+
+/*
+
+  NO MASK
+
+*/
+
+/* HSR 卡不依赖 mask/foil，无需额外 no-mask 规则 */
+
+
+
+
+/*
+
+  BOARD FRAME RAINBOW REFLECTION
+
+  随鼠标位置在彩色边框上产生棱镜反光，角度跟随指针左右偏移，位置跟随 background-x/y 平移
+
+*/
+
+.card[data-rarity="hsr holo"] .card__board-shine {
+
+  /* 渐变角度随鼠标左右移动在 45°→135° 之间旋转，模拟光源方向变化 */
+  background-image: repeating-linear-gradient(
+    calc(45deg + var(--pointer-from-left, 0.5) * 90deg),
+    var(--red)     0%,
+    var(--violet)  16.7%,
+    var(--blue)    33.3%,
+    var(--green)   50%,
+    var(--yellow)  66.7%,
+    var(--red)     83.3%,
+    var(--violet) 100%
+  );
+
+  /* 大尺寸便于平移，不留硬边 */
+  background-size: 250% 250%;
+
+  /* 随 background-x/y 偏移，system: 鼠标靠左→渐变向右，产生视差感 */
+  background-position:
+    calc(((50% - var(--background-x)) * -4) + 50%)
+    calc(((50% - var(--background-y)) * -4) + 50%);
+
+  /* color-dodge：只在边框亮色区域叠加颜色，深色/透明处无影响 */
+  mix-blend-mode: color-dodge;
+
+  /* 静止时保留 15% 底色（轻微彩虹），悬停时增强到最高 65% */
+  opacity: calc(var(--card-opacity) * 0.5 + 0.15);
+
+  filter: brightness(1.4) contrast(1.4) saturate(3);
+
+}
+
