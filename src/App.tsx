@@ -5,6 +5,7 @@ import CardProxy from "./lib/components/CardProxy";
 import Header from "./lib/components/Header/Header";
 import LeftDrawer from "./lib/components/LeftDrawer/LeftDrawer";
 import CardSmall from "./lib/components/Utils/CardSmall";
+import { withBase } from "./lib/helpers/assets";
 
 interface PokemonCard {
   id: string;
@@ -25,7 +26,7 @@ function App() {
   const [query, setQuery] = useState("");
 
   useEffect(() => {
-    fetch("/data/cards.json")
+    fetch(withBase("/data/cards.json"))
       .then((r) => r.json())
       .then((data: PokemonCard[]) => {
         setCards(data);
@@ -44,7 +45,7 @@ function App() {
     }
   }, []);
 
-  // ── card groups ──────────────────────────────────────────────────────────
+  // 閳光偓閳光偓 card groups 閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓
   const showcase = cards[0];
   const basics = cards.slice(1, 4);
   const reverse = [...cards.slice(4, 7), ...cards.slice(70, 76)];
@@ -65,7 +66,7 @@ function App() {
   const veeGallery = cards.slice(64, 70);
   const shinyVault = cards.slice(85, 91);
 
-  // ── helper to render a card group ────────────────────────────────────────
+  // 閳光偓閳光偓 helper to render a card group 閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓閳光偓
   const renderGroup = (
     group: PokemonCard[],
     extraProps?: Partial<PokemonCard>,
@@ -115,10 +116,13 @@ function App() {
             )}
           </div>
         </section>
+
+<img src={withBase("/img/boardSmall.svg")} alt="board" style={{ width: 300 }} />
+        
       </main>
 
       <div className="back-to-top">
-        <a href="#⚓-top">Back to Top</a>
+        <a href="#閳?top">Back to Top</a>
       </div>
     </>
   );

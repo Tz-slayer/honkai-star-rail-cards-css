@@ -1,4 +1,5 @@
 import React from 'react';
+import { withBase } from '../../helpers/assets';
 
 interface CardSmallProps {
   width?: number | string;
@@ -10,16 +11,16 @@ interface CardSmallProps {
 }
 
 /**
- * 骰子战斗 - 小型卡牌不规则遮罩边框
- * * 包含两个核心功能：
- * 1. 渲染出一个带不规则镂空的实体边框
- * 2. 提供了一个 id 为 `card-inner-cutout` 的裁剪路径，用于裁剪卡牌内部画作
+ * 楠板瓙鎴樻枟 - 灏忓瀷鍗＄墝涓嶈鍒欓伄缃╄竟妗?
+ * * 鍖呭惈涓や釜鏍稿績鍔熻兘锛?
+ * 1. 娓叉煋鍑轰竴涓甫涓嶈鍒欓晜绌虹殑瀹炰綋杈规
+ * 2. 鎻愪緵浜嗕竴涓?id 涓?`card-inner-cutout` 鐨勮鍓矾寰勶紝鐢ㄤ簬瑁佸壀鍗＄墝鍐呴儴鐢讳綔
  */
 const CardSmall: React.FC<CardSmallProps> = ({
   width = 200,
   height = 260,
-  fill = "#f4f6fc", // 图像中极其淡的蓝灰色底板
-  stroke = "#dbe0ea", // 淡淡的边缘描边
+  fill = "#f4f6fc", // 淇濈暀鍏煎锛氫綔涓哄簳灞傚厹搴曞簳鑹?
+  stroke = "#dbe0ea", // 淇濈暀鍏煎锛氫綔涓哄簳灞傚厹搴曟弿杈?
   className,
   style,
 }) => {
@@ -33,8 +34,8 @@ const CardSmall: React.FC<CardSmallProps> = ({
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        {/* 核心魔法 1：裁剪路径 (Clip Path) 
-          如果你有卡牌角色图片，加上 clipPath="url(#card-inner-cutout)" 即可完美契合这个框的形状
+        {/* 鏍稿績榄旀硶 1锛氳鍓矾寰?(Clip Path) 
+          濡傛灉浣犳湁鍗＄墝瑙掕壊鍥剧墖锛屽姞涓?clipPath="url(#card-inner-cutout)" 鍗冲彲瀹岀編濂戝悎杩欎釜妗嗙殑褰㈢姸
         */}
         <clipPath id="card-inner-cutout">
           <path d="
@@ -56,38 +57,24 @@ const CardSmall: React.FC<CardSmallProps> = ({
         </clipPath>
       </defs>
 
-      {/* 核心魔法 2：奇偶填充规则镂空边框
-        前一半是顺时针的外围圆角矩形，后一半是逆时针的内部多边形。
-        fillRule="evenodd" 会自动将内部图形掏空。
-      */}
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        fill={fill}
-        stroke={stroke}
-        strokeWidth="1.5"
-        d="
-          M 16 0
-          H 184 A 16 16 0 0 1 200 16
-          V 244 A 16 16 0 0 1 184 260
-          H 16 A 16 16 0 0 1 0 244
-          V 16 A 16 16 0 0 1 16 0
-          Z
-          M 184 8
-          H 56
-          A 48 48 0 0 1 8 56
-          V 210
-          A 6 6 0 0 0 11 215
-          L 45 245
-          A 8 8 0 0 0 50 248
-          H 150
-          A 8 8 0 0 0 155 245
-          L 189 215
-          A 6 6 0 0 0 192 210
-          V 16
-          A 8 8 0 0 0 184 8
-          Z
-        "
+      {/* 涓昏竟妗嗭細鏇挎崲涓?boardSmall.svg */}
+      <image
+        href={withBase("/img/boardSmall.svg")}
+        x="0"
+        y="0"
+        width="200"
+        height="260"
+        preserveAspectRatio="none"
+      />
+
+      {/* 宸︿笂瑙掕婊村浘鏍?*/}
+      <image
+        href={withBase("/img/blood.svg")}
+        x="6"
+        y="6"
+        width="42"
+        height="50"
+        preserveAspectRatio="xMinYMin meet"
       />
     </svg>
   );

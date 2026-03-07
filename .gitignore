@@ -24,3 +24,5 @@ public/img/foils/
 *.njsproj
 *.sln
 *.sw?
+.env
+.env.*
