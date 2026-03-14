@@ -63,15 +63,16 @@ function Header() {
                 rx={12}
                 fill="#2d2f39"
               />
-              <RoundedSkewRect
-                className={styles.slider}
-                x={0}
-                y={8}
-                width={276}
-                height={44}
-                rx={10}
-                fill="#ffffff"
-              />
+              <g className={styles.slider}>
+                <RoundedSkewRect
+                  x={0}
+                  y={8}
+                  width={276}
+                  height={44}
+                  rx={10}
+                  fill="#ffffff"
+                />
+              </g>
             </g>
 
             <g transform="translate(0, 30)">

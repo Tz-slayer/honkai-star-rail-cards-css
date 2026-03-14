@@ -28,7 +28,7 @@
 .headerSvg {
   margin-bottom: 2vh;
   width: 100%; /* 宽度随父容器撑满 */
-  aspect-ratio: 1020/110; /* 增加高度比例，容纳投影或溢出内容 */
+  aspect-ratio: 1255/140; /* 与当前图形边界对应的 viewBox 比例保持一致 */
   max-width: 500px; /* 或者设置一个最大限制 */
   display: block; /* 消除 svg 下方的幽灵间隙 */
   overflow: visible; /* 允许内部元素（如阴影）溢出边界显示 */

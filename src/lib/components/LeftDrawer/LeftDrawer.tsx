@@ -46,13 +46,23 @@ const oneStarBaseX = twoStarBaseX + BASE_WIDTH + SHADOW_OFFSET_X;
 const oneStarLogoCenterY = TOP_Y + (BASE_HEIGHT - STAR_LOGO_SCALE * 100) / 2;
 const oneStarLogoX = oneStarBaseX + (BASE_WIDTH - skewOffset) / 2 - STAR_LOGO_SCALE * 50;
 
+// 以实际图形边界定义 viewBox，确保视觉中心与容器中心一致
+const VIEWBOX_MIN_X = LEFT_X - skewOffset;
+const VIEWBOX_MAX_X = oneStarBaseX + BASE_WIDTH;
+const VIEWBOX_WIDTH = VIEWBOX_MAX_X - VIEWBOX_MIN_X;
+const VIEWBOX_HEIGHT = BASE_HEIGHT + SHADOW_OFFSET_Y;
+
 const LeftDrawer: React.FC<LeftDrawerProps> = () => {
   const [selectedStar, setSelectedStar] = useState(3);
 
   return (
     <dialog className={styles.dialog}>
       <header className={styles.header}>
-        <svg className={styles.headerSvg} viewBox="0 0 1020 120">
+        <svg
+          className={styles.headerSvg}
+          viewBox={`${VIEWBOX_MIN_X} 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
+          preserveAspectRatio="xMidYMid meet"
+        >
           {/* 背景阴影层 */}
           <RoundedSkewRect
             x={threeStarBaseX + SHADOW_OFFSET_X}
@@ -133,7 +143,7 @@ const LeftDrawer: React.FC<LeftDrawerProps> = () => {
       </header>
 
       <section className={styles.section}>
-        <CardSmall fill="black" width="100%" height="auto" />
+        <CardSmall fill="black" width="auto" height="auto" />
       </section>
     </dialog>
   );

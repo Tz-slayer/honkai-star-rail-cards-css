@@ -117,8 +117,13 @@ function App() {
           </div>
         </section>
 
-<img src={withBase("/img/boardSmall.svg")} alt="board" style={{ width: 300 }} />
-        
+        <CardSmall fill="black" width="auto" height="auto" />
+
+        <img
+          src={withBase("/img/boardSmall.svg")}
+          alt="board"
+          style={{ width: 300 }}
+        />
       </main>
 
       <div className="back-to-top">

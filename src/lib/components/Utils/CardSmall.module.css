@@ -1,0 +1,128 @@
+.cardContainer {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardBoard {
+  position: relative;
+  background-image: conic-gradient(
+    from var(--rotate, 0deg),
+    rgba(255, 209, 220, 1),
+    /* 柔粉 */ rgba(162, 210, 255, 1),
+    /* 天蓝 */ rgba(199, 249, 204, 1),
+    /* 薄荷绿 */ rgba(255, 245, 186, 1),
+    /* 奶油黄 */ rgba(205, 180, 219, 1),
+    /* 淡紫 */ rgba(255, 200, 221, 1),
+    /* 粉橙 */ rgba(255, 209, 220, 1) /* 回到起点，形成闭环 */
+  );
+
+  width: 180px;
+  height: 216px;
+
+  mask-image: url("/img/DiceCombatCardItemSmallComFrameMask.svg");
+  -webkit-mask-image: url("/img/DiceCombatCardItemSmallComFrameMask.svg");
+  mask-position: center;
+  -webkit-mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+
+  animation: rotateLaser 3s linear infinite;
+}
+
+.avatar {
+  position: absolute;
+    background-image: linear-gradient(
+    to bottom right,
+    rgba(255, 209, 220, 1), /* 柔粉 */
+    rgba(162, 210, 255, 1), /* 天蓝 */
+    rgba(199, 249, 204, 1), /* 薄荷绿 */
+    rgba(255, 245, 186, 1), /* 奶油黄 */
+    rgba(205, 180, 219, 1), /* 淡紫 */
+    rgba(255, 200, 221, 1)  /* 粉橙 */
+  );
+  mask-image: url("/img/DiceCombatCardItemSmallComAvatarMask.svg");
+  -webkit-mask-image: url("/img/DiceCombatCardItemSmallComAvatarMask.svg");
+  mask-position: center;
+  -webkit-mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+
+  /* 1. 添加过渡效果，让缩放变得平滑 */
+  transition: transform 0.3s ease-in-out;
+  /* 2. 确保缩放中心在正中间 */
+  transform-origin: center;
+
+  z-index: -1;
+}
+
+.hp {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  display: flex;
+  justify-content: center;
+}
+
+.hpValue {
+  font-family: 'Bahnschrift SemiBold';
+  position: absolute;
+  top: 25%;
+  font-size: 30px;
+}
+
+.attackIcon {
+  position: absolute;
+  bottom: 10%;
+  left: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.attackValue {
+  left: 18%;
+}
+
+.defenseIcon {
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.defenseValue {
+  right: 18%;
+}
+
+.defenseValue, .attackValue {
+  position: absolute;
+  bottom: 2%;
+  font-size: 30px;
+  font-family: 'Bahnschrift SemiBold';
+}
+
+
+.cardContainer:hover .avatar {
+  transform: scale(1.1);
+}
+
+/* 1. 定义动画关键帧 */
+@keyframes rotateLaser {
+  from {
+    --rotate: 0deg;
+  }
+  to {
+    --rotate: 360deg;
+  }
+}
+
+/* 2. 注册 CSS 变量以支持动画插值（增强浏览器兼容性） */
+@property --rotate {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
